@@ -21,6 +21,7 @@ RUN pacman -Sy && pacman -S --noconfirm\
     kubectl \
     kubectx \
     argocd \
+    kustomize \
     # etc
     docker \
     ansible \
@@ -28,7 +29,11 @@ RUN pacman -Sy && pacman -S --noconfirm\
     zsh \
     wget \
     openssh \
-    gnupg
+    gnupg \
+    nano \
+    # linting
+    yamllint \
+    ruby
 
 # add user to group docker
 RUN gpasswd -a doomguy docker
@@ -55,6 +60,23 @@ RUN zsh -c "/home/doomguy/.fzf/install --all"
 RUN git clone https://github.com/zsh-users/zsh-syntax-highlighting.git /home/doomguy/.zsh
 RUN echo "source /home/doomguy/.zsh/zsh-syntax-highlighting.zsh" >> /home/doomguy/.zshrc
 
+# krew
+RUN (set -x; cd "$(mktemp -d)" && \
+    OS="$(uname | tr '[:upper:]' '[:lower:]')" && \
+    ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" && \
+    KREW="krew-${OS}_${ARCH}" && \
+    curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" && \
+    tar zxvf "${KREW}.tar.gz" && \
+    ./"${KREW}" install krew)
+RUN echo 'export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"' >> /home/doomguy/.zshrc
+
+# install krew plugins
+RUN export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH" && kubectl krew install oidc-login minio
+
+# yay and rubocop
+RUN echo 'export PATH="${HOME}/.local/share/gem/ruby/3.0.0/bin:$PATH"' >> /home/doomguy/.zshrc
+RUN gem install rubocop
+
 USER root
 
 # argo-workflows
@@ -63,12 +85,16 @@ RUN gunzip argo-linux-amd64.gz
 RUN chmod +x argo-linux-amd64
 RUN mv ./argo-linux-amd64 /usr/local/bin/argo
 
-RUN usermod --shell=/bin/zsh doomguy
-
 # host services
-RUN mkdir -p /run/host-services/ && \
-    chown doomguy:doomguy /run/host-services/
+RUN mkdir -p /run/host-services/
+RUN chown doomguy:doomguy /run/host-services/
+
+# vars
 RUN echo "SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock" >> /etc/environment
+
+# shell
+RUN usermod --shell=/bin/zsh doomguy
+RUN echo 'source <(cat /home/doomguy/.zsh_override/doom_*)' >> /home/doomguy/.zshrc
 
 # CMD
 WORKDIR /home/doomguy
