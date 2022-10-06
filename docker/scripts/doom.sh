@@ -8,7 +8,8 @@ VOLUMES="-v ${HOME}/.kube:${DOCKER_HOME}/.kube \
          -v ${HOME}/.ssh:${DOCKER_HOME}/.ssh  \
          -v ${HOME}/.gitconfig:${DOCKER_HOME}/.gitconfig \
          -v ${HOME}:${DOCKER_HOME}/workdir \
-         -v ${DOCKER_SOCKET}.raw:${DOCKER_SOCKET}"
+         -v ${DOCKER_SOCKET}.raw:${DOCKER_SOCKET} \
+         -v /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock"
 VARS="-e TERM=xterm-256color"
 
 # populate args if present

@@ -65,6 +65,11 @@ RUN mv ./argo-linux-amd64 /usr/local/bin/argo
 
 RUN usermod --shell=/bin/zsh doomguy
 
+# host services
+RUN mkdir -p /run/host-services/ && \
+    chown doomguy:doomguy /run/host-services/
+RUN echo "SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock" >> /etc/environment
+
 # CMD
 WORKDIR /home/doomguy
 COPY scripts/entrypoint.sh /home/doomguy/entrypoint.sh
