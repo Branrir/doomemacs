@@ -31,6 +31,7 @@ RUN pacman -Sy && pacman -S --noconfirm\
     openssh \
     gnupg \
     nano \
+    skaffold \
     # linting
     yamllint \
     ruby
@@ -91,6 +92,7 @@ RUN chown doomguy:doomguy /run/host-services/
 
 # vars
 RUN echo "SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock" >> /etc/environment
+RUN echo "EDITOR=emacsclient" >> /etc/environment
 
 # shell
 RUN usermod --shell=/bin/zsh doomguy

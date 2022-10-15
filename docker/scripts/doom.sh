@@ -8,7 +8,8 @@ VOLUMES="-v ${HOME}/.kube:${DOCKER_HOME}/.kube \
          -v ${HOME}/.ssh:${DOCKER_HOME}/.ssh  \
          -v ${HOME}/.gitconfig:${DOCKER_HOME}/.gitconfig \
          -v ${HOME}/.config/glab-cli:${DOCKER_HOME}/.config/glab-cli \
-         -v ${HOME}:${DOCKER_HOME}/workdir \
+         -v ${HOME}/.config/argocd:${DOCKER_HOME}/.config/argocd \
+        -v ${HOME}:${DOCKER_HOME}/workdir \
          -v ${DOCKER_SOCKET}.raw:${DOCKER_SOCKET} \
          -v /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock \
          -v ${HOME}/.zsh:${DOCKER_HOME}/.zsh_override"

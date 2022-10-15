@@ -194,3 +194,4 @@
        (default +bindings +smartparens))
        (unless (display-graphic-p)
          (xterm-mouse-mode 1))
+       (server-start)
