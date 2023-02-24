@@ -8,9 +8,9 @@ VARS="-e TERM=xterm-256color"
 # populate args if present
 if [ $# -ne 0 ]; then
     if [ "${PWD}" != "${HOME}" ]; then
-        ARG=$(pwd | sed "s,${HOME}/,,")/$1
+        ARG=workdir/$(pwd | sed "s,${HOME}/,,")/$1
     else
-        ARG=$1
+        ARG=workdir/$1
     fi
 fi
 
@@ -18,13 +18,12 @@ fi
 if [[ $OSTYPE == 'darwin'* ]]; then
     VOLUMES="-v ${HOME}/.kube:${DOCKER_HOME}/.kube \
              -v ${HOME}/.docker:${DOCKER_HOME}/.docker \
-             -v ${HOME}/.ssh:${DOCKER_HOME}/.ssh  \
+             -v ${HOME}/.ssh:${DOCKER_HOME}/.ssh_host  \
              -v ${HOME}/.gitconfig:${DOCKER_HOME}/.gitconfig \
              -v ${HOME}/.config/glab-cli:${DOCKER_HOME}/.config/glab-cli \
              -v ${HOME}/.config/argocd:${DOCKER_HOME}/.config/argocd \
              -v ${HOME}:${DOCKER_HOME}/workdir \
-             -v ${DOCKER_SOCKET}.raw:${DOCKER_SOCKET} \
-             -v /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock \
+             -v ${DOCKER_SOCKET}:${DOCKER_SOCKET} \
              -v ${HOME}/.zsh:${DOCKER_HOME}/.zsh_override"
 else
     VOLUMES="-v ${HOME}/.kube:${DOCKER_HOME}/.kube \

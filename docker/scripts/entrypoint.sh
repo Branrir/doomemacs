@@ -5,8 +5,5 @@ groupmod -g $(stat -c '%g' /var/run/docker.sock) docker
 chgrp docker /var/run/docker.sock
 chown -R doomguy:doomguy /run/host-services
 
-# workdir
-cd workdir
-
 # run all concurent commands
-exec sudo -u doomguy "$@"
+exec sudo --preserve-env=SSH_AUTH_SOCK -i -u doomguy "$@"

@@ -34,7 +34,8 @@ RUN pacman -Sy && pacman -S --noconfirm\
     skaffold \
     # linting
     yamllint \
-    ruby
+    ruby \
+    go
 
 # add user to group docker
 RUN gpasswd -a doomguy docker
@@ -74,9 +75,28 @@ RUN echo 'export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"' >> /home/doomguy/.z
 # install krew plugins
 RUN export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH" && kubectl krew install oidc-login minio
 
-# yay and rubocop
-RUN echo 'export PATH="${HOME}/.local/share/gem/ruby/3.0.0/bin:$PATH"' >> /home/doomguy/.zshrc
+# rubocop
 RUN gem install rubocop
+RUN echo 'export PATH="/home/doomguy/.local/share/gem/ruby/3.0.0/bin:$PATH"' >> $HOME/.zshrc
+RUN echo 'export PATH="/home/doomguy/.local/share/gem/ruby/3.0.0/bin:$PATH"' >> $HOME/.bashrc
+
+
+
+# minimum needed for go module to work
+RUN mkdir /home/doomguy/.go
+ENV GOPATH=/home/doomguy/.go
+RUN echo 'export PATH="/home/doomguy/.go/bin:$PATH"' >> $HOME/.zshrc
+RUN echo 'export PATH="/home/doomguy/.go/bin:$PATH"' >> $HOME/.bashrc
+RUN go install github.com/x-motemen/gore/cmd/gore@latest
+RUN go install github.com/stamblerre/gocode@latest
+RUN go install golang.org/x/tools/cmd/godoc@latest
+RUN go install golang.org/x/tools/cmd/goimports@latest
+RUN go install golang.org/x/tools/cmd/gorename@latest
+RUN go install golang.org/x/tools/cmd/guru@latest
+RUN go install github.com/cweill/gotests/...@latest
+RUN go install github.com/fatih/gomodifytags@latest
+RUN go install golang.org/x/tools/gopls@latest
+RUN go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 
 USER root
 
@@ -91,8 +111,8 @@ RUN mkdir -p /run/host-services/
 RUN chown doomguy:doomguy /run/host-services/
 
 # vars
-RUN echo "SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock" >> /etc/environment
 RUN echo "EDITOR=emacsclient" >> /etc/environment
+RUN echo "GOPATH=/home/doomguy/.go" >> /etc/environment
 
 # shell
 RUN usermod --shell=/bin/zsh doomguy
