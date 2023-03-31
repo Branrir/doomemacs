@@ -36,7 +36,9 @@ RUN pacman -Sy && pacman -S --noconfirm\
     # linting
     yamllint \
     ruby \
-    go
+    go \
+    # copilot
+    nodejs
 
 # add user to group docker
 RUN gpasswd -a doomguy docker
