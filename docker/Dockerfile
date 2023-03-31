@@ -32,6 +32,7 @@ RUN pacman -Sy && pacman -S --noconfirm\
     gnupg \
     nano \
     skaffold \
+    jq \
     # linting
     yamllint \
     ruby \

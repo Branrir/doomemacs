@@ -23,7 +23,6 @@ if [[ $OSTYPE == 'darwin'* ]]; then
              -v ${HOME}/.config/glab-cli:${DOCKER_HOME}/.config/glab-cli \
              -v ${HOME}/.config/argocd:${DOCKER_HOME}/.config/argocd \
              -v ${HOME}:${DOCKER_HOME}/workdir \
-             -v ${DOCKER_SOCKET}:${DOCKER_SOCKET} \
              -v ${HOME}/.zsh:${DOCKER_HOME}/.zsh_override"
 else
     VOLUMES="-v ${HOME}/.kube:${DOCKER_HOME}/.kube \
@@ -38,4 +37,6 @@ else
              -v ${HOME}/.zsh:${DOCKER_HOME}/.zsh_override"
 fi    
 
-docker run -it -h emacs ${VARS} ${VOLUMES} branrir/doom-emacs ${ARG}
+CONTAINER_RUNTIME=${CONTAINER_RUNTIME:=docker}
+
+$CONTAINER_RUNTIME run -it -h emacs ${VARS} ${VOLUMES} branrir/doom-emacs ${ARG}
