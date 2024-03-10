@@ -51,7 +51,6 @@
        window-select     ; visually switch windows
        workspaces        ; tab emulation, persistence & separate workspaces
        ;;zen               ; distraction-free coding or writing
-       nerd-icons
 
        :editor
        (evil +everywhere); come to the dark side, we have cookies
