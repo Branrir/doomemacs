@@ -40,7 +40,9 @@ RUN pacman -Sy && pacman -S --noconfirm\
     # copilot
     nodejs \
     # fonts
-    nerd-fonts
+    nerd-fonts \
+    ttf-fira-sans \
+    ttf-fira-mono
 
 # add user to group docker
 RUN gpasswd -a doomguy docker
