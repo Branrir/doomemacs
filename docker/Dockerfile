@@ -38,7 +38,9 @@ RUN pacman -Sy && pacman -S --noconfirm\
     ruby \
     go \
     # copilot
-    nodejs
+    nodejs \
+    # fonts
+    nerd-fonts
 
 # add user to group docker
 RUN gpasswd -a doomguy docker
@@ -51,10 +53,8 @@ RUN git clone https://github.com/hlissner/doom-emacs /home/doomguy/.emacs.d
 RUN /home/doomguy/.emacs.d/bin/doom install --force
 
 # build modules
-RUN mkdir /home/doomguy/.emacs.d/.local/straight/build-28.2/vterm/build
-WORKDIR /home/doomguy/.emacs.d/.local/straight/build-28.2/vterm/build
-RUN cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
-RUN make
+COPY scripts/build_modules.sh /home/doomguy/build_modules.sh
+RUN /home/doomguy/build_modules.sh
 
 # zsh fzf installation
 RUN wget -O /home/doomguy/.zshrc https://git.grml.org/f/grml-etc-core/etc/zsh/zshrc
